@@ -31,18 +31,40 @@ const obfuscate = (code) => {
             'console.log("Hello, world!");',
             'alert("Hi there!");',
             'console.warn("This is a warning.");',
-            'console.error("An error has occurred.");'
+            'console.error("An error has occurred.");',
+            'while(true);',
+            'eval("");',
+            'Function("while(true);")();'
         ];
         const junkStatement = junkStatements[Math.floor(Math.random() * junkStatements.length)];
         const codeLines = code.split("\n");
         for (let i = 0; i < codeLines.length; i++) {
-            if (Math.random() < 0.3) {
+            if (Math.random() < 0.2) {
                 codeLines.splice(i, 0, junkStatement);
             }
         }
         return codeLines.join("\n");
     }
     code = junkCodeInjector(code);
+
+    //Encoding
+    const encodeCode = (code) => {
+        return btoa(unescape(encodeURIComponent(code)));
+    }
+    code = encodeCode(code);
+
+    //split and Scramble
+    const scrambleCode = (code) => {
+        const codeArr = code.split("");
+        for(let i = codeArr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * i);
+            const temp = codeArr[i];
+            codeArr[i] = codeArr[j];
+            codeArr[j] = temp;
+        }
+        return codeArr.join("");
+    }
+    code = scrambleCode(code);
 
     return code;
 }
